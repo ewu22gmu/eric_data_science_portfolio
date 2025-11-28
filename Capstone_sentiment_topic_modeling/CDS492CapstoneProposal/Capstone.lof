@@ -1,0 +1,11 @@
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Box plots of S\&P500 Numerical Features}}{17}{}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Box plots of NASDAQ Composite Numerical Features}}{17}{}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces S\&P 500 vs. NASDAQ Normalized Performance (Closing Price)}}{19}{}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Counts of Various Data Quality Issues In Trump Truth Social Archive}}{20}{}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Sentiment Distribution of Social Media Posts}}{23}{}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Index Closing Prices by Sentiment Class}}{24}{}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Index Daily Change in Price by Sentiment Class}}{24}{}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Top 30 Most Frequent Terms Found in Donald Trump's Truth Social Posts}}{27}{}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Spread of Daily Volatility in the S\&P500 by Topic}}{28}{}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Topic Distribution of the Seeded LDA Topic Model}}{32}{}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Spread of Daily Volatility in the S\&P500 by Topic}}{33}{}%

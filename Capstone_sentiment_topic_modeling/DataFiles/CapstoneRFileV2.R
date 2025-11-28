@@ -1,0 +1,807 @@
+## ---------------------------------------------------------------------------------------------------------------------------
+library(conflicted) #fix dplyr and stats conflicts
+library(tidyverse, tidytext, reshape2)
+#prefer dplyr library for filter() and lag()
+conflicts_prefer(dplyr::filter(),dplyr::lag(),.quiet=TRUE)
+library(readr) #for reading in .csv files with automatic encoding detection
+library(lubridate) #used for date + time objects 
+library(TTR) #used for SMA
+library(quanteda, quanteda.textstats) #used for NLP text preprocessing
+library(udpipe, stringr)
+library(vader) #used for sentiment analysis
+library(tm, topicmodels, seededlda) #topic modeling
+library(xtable, knitr, forcats)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+file_dir = "/Users/eric/Documents/University/CDS492/Capstone Proposal/DataFiles"
+setwd(file_dir)
+
+## ---------------------------------------------------------------------------------------------------------------------------
+sp500 <- read.csv('SPX.csv') %>%
+  mutate(
+    Date = mdy(Date), # mdy() is for Month-Day-Year format
+    across(c(Open, High, Low, Close), parse_number)
+  )
+nasdaq <- read.csv('IXIC.csv') %>%
+  mutate(
+    Date = mdy(Date), # mdy() is for Month-Day-Year format
+    across(c(Open, High, Low, Close), parse_number)
+  )
+ts <- read.csv('truth_archive.csv') %>% 
+  mutate(
+    created_at = ymd_hms(created_at)
+  )
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#Filter 'truth social' for posts within the time frame of 01/01/2025 - 09/26/2026
+ts$created_at <- ymd_hms(ts$created_at)
+#define start and end dates of the time frame
+start_date <- ymd("2025-01-01")
+end_date <- ymd("2025-09-26")
+
+#filter df
+ts1 <- ts %>% filter(created_at >= start_date, created_at <= end_date)
+
+### Barchart of TS1
+
+#define the link and RT regex patterns
+link_pattern <- "https?://\\S+|www\\.\\S+"
+rt_pattern <- "^\\s*RT\\b"
+
+df_counts <- ts1 %>%
+  mutate(
+    # First, trim whitespace to correctly identify blank/whitespace strings
+    content_clean = trimws(content),
+    # Categorize the content
+    category = case_when(
+      #filter following cases: blank or no content
+      is.na(content_clean) | content_clean == "" ~ "A. Blank/Empty",
+      str_detect(content_clean, regex(rt_pattern, ignore_case = TRUE)) ~ "B. Contains RT",
+      str_detect(content_clean, regex(link_pattern, ignore_case = TRUE)) ~ "C. Contains Link",
+      TRUE ~ "D. Actual Content"
+    )
+  ) %>%
+  #count occurrences
+  count(category, name = "count")
+
+p0 <- bar_plot <- ggplot(df_counts, aes(x = category, y = count, fill = category)) +
+  geom_col(show.legend = FALSE) + 
+  geom_text(aes(label = count), vjust = -0.5, size = 4) +
+  labs(
+    title = "Content Categorization Counts",
+    x = "Content Category",
+    y = "Frequency (Count)"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, max(df_counts$count) * 1.1)) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#filter df for blank content
+ts1 <- ts1 %>% filter(trimws(content) != '')
+
+#filter df for retweets and links due to retweeting
+ts1 <- ts1 %>% filter(!str_detect(content, pattern = c("https|RT: |RT @")))
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#S&P500
+sp500 <- sp500 %>% 
+  mutate(
+    #finance features
+    daily_change = Close - Open, #add a change in price per day
+    daily_volatility = High - Low, 
+    daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day
+    sma20 = SMA(Close, n = 20), #20 day simple moving avg
+    
+    #time based features
+    day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label
+    month = month(Date, label = TRUE, abbr = FALSE) #add a month label
+  )
+
+#add a movement feature
+sp500 <- sp500 %>% 
+  mutate(
+    Result = case_when(
+      daily_change > 0 ~ "gain",
+      daily_change < 0 ~ "loss",
+      daily_change == 0 ~ "none",
+      TRUE ~ NA_character_ #fallback for NA values
+    )
+  )
+
+#NASDAQ
+nasdaq <- nasdaq %>% 
+  mutate(
+    #finance features
+    daily_change = Close - Open, #add a change in price per day
+    daily_volatility = High - Low, 
+    daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day
+    sma20 = SMA(Close, n = 20), #20 day simple moving avg
+    
+    #time based features
+    day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label
+    month = month(Date, label = TRUE, abbr = FALSE) #add a month label
+  )
+
+#add a movement feature
+nasdaq <- nasdaq %>% 
+  mutate(
+    Result = case_when(
+      daily_change > 0 ~ "gain",
+      daily_change < 0 ~ "loss",
+      daily_change == 0 ~ "none",
+      TRUE ~ NA_character_ #fallback for NA values
+    )
+  )
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+ts1_vader_sentiment <- vader_df(ts1$content) # apply vader lexicon based sentiment analysis
+ts1 <- cbind(ts1, ts1_vader_sentiment) #join sentiment results back to original df
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+threshold_sent = 0.4
+
+ts1 <- ts1 %>%
+  mutate(sentiment_class = case_when(
+    compound >= threshold_sent ~ "Positive",
+    compound > -threshold_sent & compound < threshold_sent ~ "Neutral",
+    compound <= -threshold_sent ~ "Negative",
+    TRUE ~ NA_character_ # Handle any unexpected cases
+  ))
+vader_sentiment_counts <- ts1 %>%
+  count(sentiment_class)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#TS
+ts1 <- ts1 %>% mutate(
+  post_date = as_date(created_at),
+  post_time = hms::as_hms(created_at)
+)
+
+ts1 <- ts1 %>%
+  mutate(
+    sentiment_date = if_else(
+      post_time < hms::as_hms("16:30:00"),
+      post_date,
+      #if after 4:30 PM, calculate the next business day
+      case_when(
+        wday(post_date) == 6 ~ post_date + 3, # Friday -> Monday (+3)
+        wday(post_date) == 7 ~ post_date + 2, # Saturday -> Monday (+2)
+        TRUE ~ post_date + 1 # All other days -> next day (+1)
+      )
+    )
+  )
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+indices <- sp500 %>% 
+  inner_join(nasdaq, 
+             by = 'Date',
+             suffix = c('_sp500','_nasdaq')
+  )
+#Join indices with sentiment data
+indices_sent <- indices %>% 
+  left_join(ts1, by=c('Date' =  'sentiment_date'))
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+indices_union <- bind_rows(
+  "sp500" = sp500,
+  "nasdaq" = nasdaq,
+  .id = "source"
+)
+
+indices_long <- indices_union %>%
+  pivot_longer(
+    cols = where(is.numeric),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p1 <- ggplot(indices_long, aes(x = metric, y = value, fill = source)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics by Index",
+    x = "Metric",
+    y = "Value",
+    fill = "Source Index"
+  ) +
+  # Rotate axis labels for better readability
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p1)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#sp500
+sp500_long <- sp500 %>%
+  pivot_longer(
+    cols = c('Open', 'High', 'Low', 'Close'),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p2_1 <- ggplot(sp500_long, aes(x = metric, y = value)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics In the S&P500",
+    x = "Metric",
+    y = "Value"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p2_1)
+
+
+#nasdaq
+nasdaq_long <- nasdaq %>%
+  pivot_longer(
+    cols = c('Open', 'High', 'Low', 'Close'),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p3_1 <- ggplot(nasdaq_long, aes(x = metric, y = value)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics In the NASDAQ Composite",
+    x = "Metric",
+    y = "Value"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p3_1)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p2_1.png",p2_1,width = 6, height = 4, units = "in", dpi = 300)
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p3_1.png",p3_1,width = 6, height = 4, units = "in", dpi = 300)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#Normalize indices\$Close_i for i in {\_sp500, nasdaq}
+indices_normalized <- indices %>%
+  mutate(
+    Close_sp500_normalized = (Close_sp500 / first(Close_sp500)) * 100,
+    Close_nasdaq_normalized = (Close_nasdaq / first(Close_nasdaq)) * 100
+  )
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+p4 <- ggplot(data = indices_normalized, aes(x = Date)) +
+  geom_line(aes(y = Close_sp500_normalized, color = "S&P 500"), linewidth = 1) +
+  geom_line(aes(y = Close_nasdaq_normalized, color = "NASDAQ"), linewidth = 1) +
+  labs(
+    title = "S&P 500 vs. NASDAQ Performance",
+    subtitle = "Indexed to start date (Base = 100)",
+    y = "Normalized Price",
+    x = "Date",
+    color = "Index"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+plot(p4)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p4.png", p4, width = 7, height = 5, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+p8 <- ggplot(vader_sentiment_counts, aes(x = sentiment_class, y = n, fill = sentiment_class)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Sentiment Distribution of Social Media Posts",
+    x = "Sentiment",
+    y = "Number of Posts"
+  ) +
+  theme_minimal()
+
+plot(p8)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p8.png",p8,width = 8, height = 5, units = "in", dpi = 300)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+indices_sent_long <- indices_sent %>% 
+  pivot_longer(
+    cols = c(Close_sp500, Close_nasdaq),
+    names_to = "metric",
+    values_to = "values"
+  )
+
+p10 <- ggplot(indices_sent_long, aes(x = sentiment_class, y = values, fill = sentiment_class)) +
+  geom_boxplot() +
+  labs(
+    title = "Index Closing Prices by Sentiment Class",
+    x = "Tweet Sentiment Class",
+    y = "Closing Price (USD)"
+  ) +
+  # Use facet_wrap to create separate plots for S&P 500 and Nasdaq
+  facet_wrap(~ metric, scales = "free_y") + 
+  theme_minimal()
+
+plot(p10)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p10.png",p10,width = 8, height = 5, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+indices_sent_long <- indices_sent %>% 
+  pivot_longer(
+    cols = c(daily_change_sp500, daily_change_nasdaq),
+    names_to = "metric",
+    values_to = "values"
+  )
+
+p11 <- ggplot(indices_sent_long, aes(x = sentiment_class, y = values, fill = sentiment_class)) +
+  geom_boxplot() +
+  labs(
+    
+    title = "Index Daily Change in Price by Sentiment Class",
+    x = "Tweet Sentiment Class",
+    y = "Daily Change in Price (USD)"
+  ) +
+  # Use facet_wrap to create separate plots for S&P 500 and Nasdaq
+  facet_wrap(~ metric, scales = "free_y") + 
+  theme_minimal()
+
+plot(p11)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p11.png",p11,width = 8, height = 5, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+indices_sent_long <- indices_sent %>% 
+  pivot_longer(
+    cols = c(daily_change_sp500, daily_change_nasdaq),
+    names_to = "metric",
+    values_to = "values"
+  )
+
+indices_sent_long_filtered <- indices_sent_long %>%
+  filter(!str_detect(content, pattern = c("https|RT: |RT @")))
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#ANOVA Test on sentiment vs closing price S&P500
+sp500_sent_anova = lm(Close_sp500 ~ sentiment_class, data=indices_sent)
+
+sp500_sent_anova <- anova(sp500_sent_anova)
+
+sp500_sent_anova
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#ANOVA Test on sentiment vs closing price NASDAQ Composite
+nasdaq_sent_anova = lm(daily_volatility_nasdaq ~ sentiment_class, data=indices_sent)
+
+nasdaq_sent_anova <- anova(nasdaq_sent_anova)
+
+nasdaq_sent_anova
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#Assign a 'doc_id' to ts1 to add back the topics after they have been discovered by topic model
+ts1$doc_id <- as.character(1:nrow(ts1))
+
+#create vcorpus
+trump_vcorpus <- VCorpus(VectorSource((ts1$content)))
+
+#Cleaning
+trump_vcorpus <- tm_map(trump_vcorpus, content_transformer(tolower))
+trump_vcorpus <- tm_map(trump_vcorpus, removePunctuation) #remove punctuation
+#trump_vcorpus <- tm_map(trump_vcorpus, removeNumbers)     #remove numbers
+trump_vcorpus <- tm_map(trump_vcorpus, removeWords, tm::stopwords('english'))
+#trump_vcorpus <- tm_map(trump_vcorpus, stripWhitespace)   #remove dupe white space
+
+trump_qeda_corpus <- corpus(trump_vcorpus)
+
+trump_dfm <- dfm(tokens(trump_qeda_corpus))
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+word_frequencies <- textstat_frequency(trump_dfm)
+print(word_frequencies)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+p13 <- trump_dfm %>% 
+  textstat_frequency(n=30) %>%
+  ggplot(aes(x=reorder(feature,frequency),y=frequency)) +
+  geom_point() +
+  coord_flip() +
+  labs(
+    title = "Top 30 Most Frequent Terms Found in Donald Trump's Truth Social Posts",
+    x = NULL,
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+plot(p13)
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/p13.png",p13,width = 8, height = 5, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+tokens_trump <- tokens(trump_qeda_corpus, remove_symbols = TRUE)
+
+tstat_col_trump <- tokens_select(
+  tokens_trump,
+  pattern = "^[0-9A-Z]",
+  valuetype = "regex",
+  case_insensitive = TRUE,
+  padding = TRUE
+) %>% textstat_collocations(
+  min_count = 10,
+  size = 4
+)
+
+head(tstat_col_trump, 20)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#plot collocations
+
+col_trump_20 <- as.data.frame(head(tstat_col_trump, 20))
+
+col_trump_20 %>% ggplot(aes(x=fct_reorder(collocation,count,.desc=TRUE), y=count)) + 
+  geom_col() + 
+  labs(title = "Barchart of Collocations from the Trump Truth Social Archive",
+       x = "Collocation",
+       y = "Count") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+trump_dtm = DocumentTermMatrix(trump_vcorpus)
+inspect(trump_dtm)
+
+#findFreqTerms(trump_dtm, 15)
+
+# try against dictionary
+#inspect(DocumentTermMatrix(trump_vcorpus), list(dictionary = c()))
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+set.seed(123) #set seed for reproducability
+n_terms = 10 #n_terms
+
+trump_lda <- LDA(
+  trump_dtm,
+  k = n_terms,
+  control = list(seed = 123)
+)
+
+#get top n words for each topic
+trump_topic_terms <- topicmodels::terms(trump_lda, n_terms)
+print(trump_topic_terms)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#terms >>>> matrix >>>> data.frame (manually assign col names)
+trump_topics_matrix <- as.matrix(trump_topic_terms)
+
+trump_topics_df <- as.data.frame(trump_topics_matrix)
+
+latex_table <- xtable(trump_topics_df, caption = "Top Terms per Topic", label = "tab:lda_terms")
+
+print(latex_table, 
+      type = "latex", 
+      include.rownames = FALSE, # Usually you don't want R row numbers
+      file = "/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/lda_topic_terms.tex" #opt to .texfile
+)
+
+topic_terms_tidy_manual <- trump_topics_matrix %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Rank") %>%
+  tidyr::pivot_longer(
+    cols = starts_with("Topic"),
+    names_to = "Topic",
+    values_to = "Term"
+  )
+
+#generate the LaTeX code
+#latex_code <- kable(topic_terms_tidy_manual, 
+#                    format = "latex", 
+#                    booktabs = TRUE, # Use professional booktabs lines
+#                    caption = "Top 10 Terms per Topic",
+#                    row.names = FALSE) %>% 
+#  kable_styling(latex_options = "striped", # Optional: adds a striped effect
+#                position = "center") %>%
+#  add_footnote(label = "Data generated from an LDA model.", notation = "none")
+
+#opt
+#print(latex_code)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#plot the topic distributions
+topic_dists_trump <- tidy(
+  trump_lda,
+  matrix = "gamma"
+)
+
+trump_max_topics <- topic_dists_trump %>% 
+  group_by(document) %>%
+  summarise(max_gamma = max(gamma)) %>%
+  ungroup()
+
+selected_documents <- trump_max_topics %>%
+  filter(max_gamma < 0.8) %>%
+  top_n(12, max_gamma) %>% # Select the 12 most "mixed" (or a different number)
+  pull(document)
+
+plot_data <- topic_dists_trump %>%
+  filter(document %in% selected_documents) %>%
+  # Reorder the documents for better display in the plot
+  mutate(document = factor(document, levels = selected_documents))
+
+ggplot(plot_data, aes(x = topic, y = gamma, fill = topic)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ document, scales = "free_y", ncol = 4) + # ncol sets the number of columns
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Topic Distribution Across Selected Documents",
+    subtitle = "Document-Topic Proportion (Gamma)",
+    x = "Topic Number",
+    y = "Proportion"
+  ) +
+  theme_minimal() #+
+  #theme(axis.text.x = element_blank())
+
+ggplot(plot_data, aes(x = topic, y = gamma, color = topic)) +
+  geom_point(size = 3, show.legend = FALSE) +
+  facet_wrap(~ document, scales = "free_y", ncol = 4) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Topic Distribution Across Selected Documents",
+    subtitle = "Document-Topic Proportion (Gamma)",
+    x = "Topic Number",
+    y = "Proportion"
+  ) +
+  theme_minimal()
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#assign topic categories
+
+#get topic distribution for documents
+trump_topic_dominant <- topic_dists_trump %>%
+  group_by(document) %>%
+  slice_max(gamma, n = 1) %>%
+  ungroup()
+
+#check if the left join has already occured
+if (!("topic" %in% names(ts1))) {
+  # If the column does not exist, run the left_join
+  ts1 <- left_join(ts1, trump_topic_dominant, by = c('doc_id' = 'document'))
+}
+#uncomment these later after assigning topic categories for discovered topics
+#topic_categories <- c('trade_tarrifs', 'law_speak_us', '') #finish adding them; k == 10
+#ts1$topic <- topic_categories[ts1$topic]
+
+#isolate n_i of each topic to view
+#ts1_topic_sample <- ts1 %>% 
+#  select(created_at, content, text, topic, gamma) %>%
+#  group_by(topic) %>%
+#  sample_n(10) %>%
+#  ungroup()
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+#tests
+ts1_topic_indices <- indices %>% left_join(ts1,by=c("Date" = "sentiment_date"))
+
+ts1_topic_indices$topic <- as.factor(ts1_topic_indices$topic)
+
+ts1_topic_indices_long <- ts1_topic_indices %>% pivot_longer(
+  cols = c("daily_change_sp500", "daily_volatility_sp500","daily_return_sp500", "daily_change_nasdaq", "daily_volatility_nasdaq", "daily_return_nasdaq"),
+  values_to = "values",
+  names_to = "metric"
+)
+
+p14 <- ts1_topic_indices_long %>% ggplot(aes(metric, values))+
+  geom_boxplot()+
+  facet_wrap("topic")+
+  labs(
+    title = "Distribution of Metrics by Topic",
+    x = "Metric",
+    y = "Value"
+  ) +
+  #rotate axis labels for better readability
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+ts1_topic_indices2 <- indices_union %>% left_join(ts1,by=c("Date" = "sentiment_date"),relationship = "many-to-many")
+
+ts1_topic_indices_long2 <- ts1_topic_indices2 %>% pivot_longer(
+  cols = c("daily_change"),
+  values_to = "values",
+  names_to = "metric"
+)
+
+ts1_topic_indices_long2_filtered <- ts1_topic_indices_long2 %>% filter(source == "sp500", gamma > 0.75)
+
+topic_sp500_boxplot <- ts1_topic_indices_long2_filtered %>% ggplot(aes(metric, values,fill=source))+
+  geom_boxplot()+
+  facet_wrap("topic")+
+  ggplot2::coord_cartesian(ylim = c(-100, 100))+
+  labs(
+    title = "Distribution of Metrics by Topic",
+    x = "Metric",
+    y = "Value",
+    fill = "source"
+  ) +
+  #rotate axis labels for better readability
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/topic_sp500_boxplot.png",topic_sp500_boxplot,width = 6, height = 4, units = "in", dpi = 300)
+
+# what about factoring for day of week? Does dj care for what day "pos\/neg" news occurs on?
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+print("Anova test")
+test2 <- aov(daily_volatility_sp500 ~ topic, data=ts1_topic_indices %>% filter(gamma > 0.6))
+
+#test2 <- aov(daily_volatility_sp500 ~ topic, data=ts1_topic_indices)
+
+print(test2)
+print(summary(test2))
+
+print("")
+print("Post-hoc test")
+posthoc_tukey <- as.data.frame(TukeyHSD(test2)$topic)
+colnames(posthoc_tukey) <- c("diff", "lwr", "upr", "pval")
+subset(posthoc_tukey, pval < 0.05)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+latex_table_LDA <- xtable(subset(posthoc_tukey, pval < 0.05), caption = "Post-Hoc Tukey LDA", label = "tab:Post-Hoc Tukey LDA")
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+seed_topic_dict <- dictionary(
+  list(
+    IMIGRATION = c('aliens', 'border', 'borders', 'enforcement', 'homeland', 'illegal', 'illegally', 'illegals', 'migrant', 'mexico', 'patrol'),
+    RATES = c('bill', 'budget', 'capital', 'inflation', 'job', 'jobs', 'jerome', 'powell', 'price', 'prices', 'rate', 'rates', 'tax', 'treasury', 'economy', 'economic', 'taxes', 'fed'),
+    TRADE = c('canada', 'china', 'india', 'negotiations', 'steel', 'tariff', 'tariffs', 'trade', 'war', 'commerce'),
+    WAR = c('defense', 'hostages', 'ceasefire', 'iran', 'israel', 'military', 'putin', 'russia', 'russian', 'ukraine', 'vladimir', 'zelenskyy'),
+    SOCIAL = c('elon', 'musk', 'cost', 'cut', 'costs', 'cuts', 'cutting', 'security', 'social', 'veterans')
+  )
+)
+
+set.seed(6969)
+trump_seeded_lda <- textmodel_seededlda(trump_dfm,
+                                        seed_topic_dict,
+                                        batch_size = 0.01, 
+                                        auto_iter = TRUE,
+                                        verbose = TRUE,
+                                        residual = 3)
+
+knitr::kable(seededlda::terms(trump_seeded_lda,20))
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+pad_vector <- function(x, max_len) {
+  # If the vector is shorter than max_len, append NAs
+  if (length(x) < max_len) {
+    x <- c(x, rep(NA, max_len - length(x)))
+  }
+  return(x)
+}
+
+seed_topic_list <- list(
+    IMIGRATION = c('aliens', 'border', 'borders', 'enforcement', 'homeland', 'illegal', 'illegally', 'illegals', 'migrant', 'mexico', 'patrol'),
+    RATES = c('bill', 'budget', 'capital', 'inflation', 'job', 'jobs', 'jerome', 'powell', 'price', 'prices', 'rate', 'rates', 'tax', 'treasury', 'economy', 'economic', 'taxes', 'fed'),
+    TRADE = c('canada', 'china', 'india', 'negotiations', 'steel', 'tariff', 'tariffs', 'trade', 'war', 'commerce'),
+    WAR = c('defense', 'hostages', 'ceasefire', 'iran', 'israel', 'military', 'putin', 'russia', 'russian', 'ukraine', 'vladimir', 'zelenskyy'),
+    SOCIAL = c('elon', 'musk', 'cost', 'cut', 'costs', 'cuts', 'cutting', 'security', 'social', 'veterans')
+)
+
+# Apply the padding function to all list elements
+padded_list <- lapply(seed_topic_list, pad_vector, max_len = 18)
+
+# Now, create the data frame
+topic_df <- data.frame(padded_list)
+
+# Now, the xtable function will work
+xtable(topic_df, 
+       caption = "Seeded Topic Dictionary", 
+       label = "tab:Seeded Topic Dictionary")
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+slda_theta <- data.frame(trump_seeded_lda$theta)
+slda_theta$doc_id <- substring(rownames(slda_theta),5)
+
+slda_topic_max <- slda_theta %>% 
+                      pivot_longer(
+                        cols = where(is.numeric),
+                        names_to = "slda_topic",
+                        values_to = "slda_gamma"
+                      ) %>% 
+                        group_by(doc_id) %>%
+                        slice_max(slda_gamma, n = 1) %>%
+                        ungroup()
+
+if (!("slda_topic" %in% names(ts1_topic_indices))){
+  ts1_topic_indices2 <- left_join(ts1_topic_indices, slda_topic_max, by = c("doc_id" = "doc_id"))
+}
+
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+slda_topic_dist <- slda_topic_max %>%
+  ggplot(aes(x = reorder(slda_topic, slda_topic, FUN = length))) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    title = "Count of Topics Discovered by the SeededLDA Model",
+    y = "Number of Documents (n)",
+    x = "Seed Topic (Sorted by Count)"
+  ) +
+  theme_minimal()
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/slda_topic_dist.png",slda_topic_dist,width = 6, height = 4, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+ts1_topic_indices_long3 <- ts1_topic_indices2 %>% pivot_longer(
+  #cols = c("daily_change_sp500", "daily_volatility_sp500","daily_change_nasdaq", "daily_volatility_nasdaq"),
+  cols = c("daily_volatility_sp500"),
+  values_to = "values",
+  names_to = "metric"
+)
+
+slda_topic_sp500_boxplot <- ts1_topic_indices_long3 %>% 
+  filter(slda_gamma > 0.5) %>% 
+  ggplot(aes(metric, values))+
+  geom_boxplot()+
+  facet_wrap("slda_topic")+
+  ggplot2::coord_cartesian(ylim = c(0, 100))+
+  labs(
+    title = "Distribution of Metrics by Topic",
+    x = "Metric",
+    y = "Value"
+  ) +
+  #rotate axis labels for better readability
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("/Users/eric/Documents/University/CDS492/Capstone Proposal/Plots/slda_topic_sp500_boxplot.png",slda_topic_sp500_boxplot,width = 6, height = 4, units = "in", dpi = 300)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+print("Anova test")
+test_slda <- aov(daily_volatility_sp500 ~ slda_topic, data=ts1_topic_indices2 %>% filter(slda_gamma > 0.4))
+print(test_slda)
+print(summary(test_slda))
+
+print("")
+print("Post-hoc test")
+posthoc_tukey <- as.data.frame(TukeyHSD(test_slda)$slda_topic)
+colnames(posthoc_tukey) <- c("diff", "lwr", "upr", "pval")
+subset(posthoc_tukey, pval < 0.05)
+
+
+## ---------------------------------------------------------------------------------------------------------------------------
+latex_table_SLDA <- xtable(subset(posthoc_tukey, pval < 0.05), caption = "Post-Hoc Tukey SLDA", label = "tab:Post-Hoc Tukey SLDA")
+

@@ -1,0 +1,17 @@
+\contentsline {chapter}{\numberline {}\hspace *{-0.25in}List of Tables}{vi}{}%
+\contentsline {chapter}{\numberline {}\hspace *{-0.25in}List of Figures}{vii}{}%
+\contentsline {chapter}{\numberline {}\hspace *{-0.25in}Abstract}{viii}{}%
+\contentsline {chapter}{\numberline {1} Introduction}{1}{}%
+\contentsline {chapter}{\numberline {2} Prior Research}{2}{}%
+\contentsline {section}{\numberline {2.1}Machine Learning or Lexicon Based Sentiment Analysis Techniques on Social Media Posts by David L. John and Bela Stantic (2022)}{2}{}%
+\contentsline {section}{\numberline {2.2}Predicting the Effects of News Sentiments on the Stock Market by Dev Shah, Haruna Isah, and Farhana Zulkernine (2018)}{4}{}%
+\contentsline {section}{\numberline {2.3}Sentiment Analysis on Social Media for Stock Movement Prediction by Thien H. Nguyen, Kiyoaki Shirai, and Julien Velcin (2015)}{5}{}%
+\contentsline {section}{\numberline {2.4}Effect of Public Sentiment on Stock Market Movement Prediction During the COVID-19 Outbreak by Das, Sahukhan, Chatterjee, and Charkrabarti (2022)}{9}{}%
+\contentsline {section}{\numberline {2.5}Using Twitter to Predict the Stock Market: Where is the mood effect? (2015)}{11}{}%
+\contentsline {section}{\numberline {2.6}Investor Sentiment in the Stock Market by Malcom Baker and Jeffery Wurgler (2007)}{14}{}%
+\contentsline {chapter}{\numberline {3} Data}{16}{}%
+\contentsline {chapter}{\numberline {4} Theory}{21}{}%
+\contentsline {chapter}{\numberline {5} Results}{23}{}%
+\contentsline {chapter}{\numberline {6} Conclusion}{35}{}%
+\contentsline {chapter}{\numberline {7} Software}{38}{}%
+\contentsline {chapter}{\numberline {}\hspace *{-0.25in}Bibliography}{57}{}%

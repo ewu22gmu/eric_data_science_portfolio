@@ -1,0 +1,649 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.19)  19 NOV 2025 18:56
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"/Users/eric/Documents/University/CDS492/Capstone Proposal/CDS492CapstoneProposal_noabs/Capstone.tex"
+(/Users/eric/Documents/University/CDS492/Capstone Proposal/CDS492CapstoneProposal_noabs/Capstone.tex
+LaTeX2e <2022-11-01> patch level 1
+L3 programming layer <2023-02-22> (/usr/local/texlive/2023/texmf-dist/tex/latex/base/report.cls
+Document Class: report 2022/07/02 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2023/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@chapter=\count186
+\c@section=\count187
+\c@subsection=\count188
+\c@subsubsection=\count189
+\c@paragraph=\count190
+\c@subparagraph=\count191
+\c@figure=\count192
+\c@table=\count193
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (./gmuETD.sty
+\c@lem=\count194
+\c@prop=\count195
+\c@assum=\count196
+\c@Def=\count197
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen141
+\Gin@req@width=\dimen142
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2022/04/08 v2.17n AMS math features
+\@mathmargin=\skip50
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2023/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen143
+)) (/usr/local/texlive/2023/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen144
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count198
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count199
+\leftroot@=\count266
+LaTeX Info: Redefining \overline on input line 399.
+LaTeX Info: Redefining \colon on input line 410.
+\classnum@=\count267
+\DOTSCASE@=\count268
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box51
+\strutbox@=\box52
+LaTeX Info: Redefining \big on input line 722.
+LaTeX Info: Redefining \Big on input line 723.
+LaTeX Info: Redefining \bigg on input line 724.
+LaTeX Info: Redefining \Bigg on input line 725.
+\big@size=\dimen145
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count269
+LaTeX Info: Redefining \bmod on input line 905.
+LaTeX Info: Redefining \pmod on input line 910.
+LaTeX Info: Redefining \smash on input line 940.
+LaTeX Info: Redefining \relbar on input line 970.
+LaTeX Info: Redefining \Relbar on input line 971.
+\c@MaxMatrixCols=\count270
+\dotsspace@=\muskip16
+\c@parentequation=\count271
+\dspbrk@lvl=\count272
+\tag@help=\toks18
+\row@=\count273
+\column@=\count274
+\maxfields@=\count275
+\andhelp@=\toks19
+\eqnshift@=\dimen146
+\alignsep@=\dimen147
+\tagshift@=\dimen148
+\tagwidth@=\dimen149
+\totwidth@=\dimen150
+\lineht@=\dimen151
+\@envbody=\toks20
+\multlinegap=\skip51
+\multlinetaggap=\skip52
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2953.
+LaTeX Info: Redefining \] on input line 2954.
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks22
+\thm@bodyfont=\toks23
+\thm@headfont=\toks24
+\thm@notefont=\toks25
+\thm@headpunct=\toks26
+\thm@preskip=\skip53
+\thm@postskip=\skip54
+\thm@headsep=\skip55
+\dth@everypar=\toks27
+) (/usr/local/texlive/2023/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box53
+\UL@hyphenbox=\box54
+\UL@skip=\skip56
+\UL@hook=\toks28
+\UL@height=\dimen152
+\UL@pe=\count276
+\UL@pixel=\dimen153
+\ULC@box=\box55
+Package: ulem 2019/11/18
+\ULdepth=\dimen154
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/siunitx/siunitx.sty
+Package: siunitx 2023-03-04 v3.2.2 A comprehensive (SI) units package
+\l__siunitx_angle_tmp_dim=\dimen155
+\l__siunitx_angle_marker_box=\box56
+\l__siunitx_angle_unit_box=\box57
+\l__siunitx_compound_count_int=\count277
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/translations/translations.sty
+Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages (CN)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count278
+) (/usr/local/texlive/2023/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (/usr/local/texlive/2023/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+) (/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+) (/usr/local/texlive/2023/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+\l__siunitx_number_exponent_fixed_int=\count279
+\l__siunitx_number_min_decimal_int=\count280
+\l__siunitx_number_min_integer_int=\count281
+\l__siunitx_number_round_precision_int=\count282
+\l__siunitx_number_lower_threshold_int=\count283
+\l__siunitx_number_upper_threshold_int=\count284
+\l__siunitx_number_group_first_int=\count285
+\l__siunitx_number_group_size_int=\count286
+\l__siunitx_number_group_minimum_int=\count287
+\l__siunitx_table_tmp_box=\box58
+\l__siunitx_table_tmp_dim=\dimen156
+\l__siunitx_table_column_width_dim=\dimen157
+\l__siunitx_table_integer_box=\box59
+\l__siunitx_table_decimal_box=\box60
+\l__siunitx_table_uncert_box=\box61
+\l__siunitx_table_before_box=\box62
+\l__siunitx_table_after_box=\box63
+\l__siunitx_table_before_dim=\dimen158
+\l__siunitx_table_carry_dim=\dimen159
+\l__siunitx_unit_tmp_int=\count288
+\l__siunitx_unit_position_int=\count289
+\l__siunitx_unit_total_int=\count290
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/tools/array.sty
+Package: array 2022/09/04 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen160
+\ar@mcellbox=\box64
+\extrarowheight=\dimen161
+\NC@list=\toks29
+\extratabsurround=\skip57
+\backup@length=\skip58
+\ar@cellbox=\box65
+)) (/usr/local/texlive/2023/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count291
+\float@exts=\toks30
+\float@box=\box66
+\@float@everytoks=\toks31
+\@floatcapt=\box67
+)
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 55.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count292
+\l__pdf_internal_box=\box68
+) (./Capstone.aux)
+\openout1 = `Capstone.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+ (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count293
+\scratchdimen=\dimen162
+\scratchbox=\box69
+\nofMPsegments=\count294
+\nofMParguments=\count295
+\everyMPshowfont=\toks32
+\MPscratchCnt=\count296
+\MPscratchDim=\dimen163
+\MPnumerator=\count297
+\makeMPintoPDFobject=\count298
+\everyMPtoPDFconversion=\toks33
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+)) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (/usr/local/texlive/2023/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
+File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
+)
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 55.
+ [1
+
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 103--103
+
+ []
+
+[2] [2{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [3] [4] (./Capstone.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+))
+\tf@toc=\write3
+\openout3 = `Capstone.toc'.
+
+ [5
+
+]
+\hspace {2.225 in} \large CHAPTER 1.
+(./Capstone.lot)
+\tf@lot=\write4
+\openout4 = `Capstone.lot'.
+
+ [6
+
+]
+\hspace {2.225 in} \large CHAPTER 2.
+(./Capstone.lof)
+\tf@lof=\write5
+\openout5 = `Capstone.lof'.
+
+ [7
+
+]
+\hspace {2.225 in} \large CHAPTER 3.
+[8
+
+]
+\hspace {2.225 in} \large CHAPTER 1.
+[1
+
+]
+\hspace {2.225 in} \large CHAPTER 2.
+[2
+
+] [3] [4] [5] [6] [7] [8]
+Overfull \hbox (39.07114pt too wide) in paragraph at lines 245--245
+\OT1/cmr/bx/n/14.4 Pre-dic-tion Dur-ing the COVID-19 Out-break by Das, Sahukhan,
+ []
+
+[9]
+Overfull \hbox (6.77332pt too wide) in paragraph at lines 255--256
+\OT1/cmr/m/n/10.95 and pre-computed lexicon-based tools. The dictionary-based tools were: Loughran-McDonald
+ []
+
+[10] [11] [12]
+Overfull \hbox (3.17783pt too wide) in paragraph at lines 293--293
+[]\OT1/cmr/bx/n/14.4 Investor Sen-ti-ment in the Stock Mar-ket by Mal-com Baker
+ []
+
+[13] [14] [15]
+\hspace {2.225 in} \large CHAPTER 3.
+<p2_1.png, id=88, 433.62pt x 289.08pt>
+File: p2_1.png Graphic file (type png)
+<use p2_1.png>
+Package pdftex.def Info: p2_1.png  used on input line 326.
+(pdftex.def)             Requested size: 325.215pt x 216.81828pt.
+[16
+
+]
+<p3_1.png, id=95, 433.62pt x 289.08pt>
+File: p3_1.png Graphic file (type png)
+<use p3_1.png>
+Package pdftex.def Info: p3_1.png  used on input line 333.
+(pdftex.def)             Requested size: 325.215pt x 216.81828pt.
+ [17 <./p2_1.png> <./p3_1.png>]
+<p4.png, id=101, 505.89pt x 361.35pt>
+File: p4.png Graphic file (type png)
+<use p4.png>
+Package pdftex.def Info: p4.png  used on input line 358.
+(pdftex.def)             Requested size: 433.62pt x 309.7349pt.
+ [18]
+<p0.png, id=105, 578.16pt x 361.35pt>
+File: p0.png Graphic file (type png)
+<use p0.png>
+Package pdftex.def Info: p0.png  used on input line 367.
+(pdftex.def)             Requested size: 433.62pt x 271.01184pt.
+ [19 <./p4.png>] [20 <./p0.png>]
+\hspace {2.225 in} \large CHAPTER 4.
+
+Underfull \hbox (badness 10000) in paragraph at lines 403--404
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 413--415
+
+ []
+
+[21
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 424--425
+
+ []
+
+[22]
+\hspace {2.225 in} \large CHAPTER 5.
+<p8.png, id=122, 578.16pt x 361.35pt>
+File: p8.png Graphic file (type png)
+<use p8.png>
+Package pdftex.def Info: p8.png  used on input line 437.
+(pdftex.def)             Requested size: 368.57964pt x 230.35895pt.
+<p10.png, id=123, 578.16pt x 361.35pt>
+File: p10.png Graphic file (type png)
+<use p10.png>
+Package pdftex.def Info: p10.png  used on input line 446.
+(pdftex.def)             Requested size: 368.57964pt x 230.35895pt.
+[23
+
+ <./p8.png>]
+<p11.png, id=128, 578.16pt x 361.35pt>
+File: p11.png Graphic file (type png)
+<use p11.png>
+Package pdftex.def Info: p11.png  used on input line 453.
+(pdftex.def)             Requested size: 368.57964pt x 230.35895pt.
+ [24 <./p10.png> <./p11.png>] [25]
+Underfull \hbox (badness 10000) in paragraph at lines 500--501
+
+ []
+
+<p13.png, id=138, 578.16pt x 361.35pt>
+File: p13.png Graphic file (type png)
+<use p13.png>
+Package pdftex.def Info: p13.png  used on input line 508.
+(pdftex.def)             Requested size: 390.25534pt x 243.90623pt.
+[26] [27 <./p13.png>]
+<topic_sp500_boxplot.png, id=146, 433.62pt x 289.08pt>
+File: topic_sp500_boxplot.png Graphic file (type png)
+<use topic_sp500_boxplot.png>
+Package pdftex.def Info: topic_sp500_boxplot.png  used on input line 546.
+(pdftex.def)             Requested size: 390.25534pt x 260.18282pt.
+ [28 <./topic_sp500_boxplot.png>] [29] [30]
+<slda_topic_dist.png, id=159, 433.62pt x 289.08pt>
+File: slda_topic_dist.png Graphic file (type png)
+<use slda_topic_dist.png>
+Package pdftex.def Info: slda_topic_dist.png  used on input line 635.
+(pdftex.def)             Requested size: 390.25534pt x 260.18282pt.
+ [31]
+<slda_topic_sp500_boxplot.png, id=163, 433.62pt x 289.08pt>
+File: slda_topic_sp500_boxplot.png Graphic file (type png)
+<use slda_topic_sp500_boxplot.png>
+Package pdftex.def Info: slda_topic_sp500_boxplot.png  used on input line 644.
+(pdftex.def)             Requested size: 390.25534pt x 260.18282pt.
+ [32 <./slda_topic_dist.png>] [33 <./slda_topic_sp500_boxplot.png>] [34]
+\hspace {2.225 in} \large CHAPTER 6.
+[35
+
+] [36] [37]
+\hspace {2.225 in} \large CHAPTER 7.
+[38
+
+]
+Overfull \hbox (32.02371pt too wide) in paragraph at lines 815--815
+[]\OT1/cmtt/m/n/10.95 #Filter 'truth social' for posts within the time frame of 01/01/2025 - 09/26/2026[] 
+ []
+
+[39]
+Overfull \hbox (83.7619pt too wide) in paragraph at lines 815--815
+[]      \OT1/cmtt/m/n/10.95 str_detect(content_clean, regex(rt_pattern, ignore_case = TRUE)) ~ "B. Contains RT",[] 
+ []
+
+
+Overfull \hbox (106.75665pt too wide) in paragraph at lines 815--815
+[]      \OT1/cmtt/m/n/10.95 str_detect(content_clean, regex(link_pattern, ignore_case = TRUE)) ~ "C. Contains Link",[] 
+ []
+
+
+Overfull \hbox (3.28027pt too wide) in paragraph at lines 886--886
+[]    \OT1/cmtt/m/n/10.95 daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day[] 
+ []
+
+
+Overfull \hbox (37.7724pt too wide) in paragraph at lines 886--886
+[]    \OT1/cmtt/m/n/10.95 day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label[] 
+ []
+
+[40]
+Overfull \hbox (3.28027pt too wide) in paragraph at lines 886--886
+[]    \OT1/cmtt/m/n/10.95 daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day[] 
+ []
+
+
+Overfull \hbox (37.7724pt too wide) in paragraph at lines 886--886
+[]    \OT1/cmtt/m/n/10.95 day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label[] 
+ []
+
+[41]
+Overfull \hbox (89.51059pt too wide) in paragraph at lines 886--886
+[]\OT1/cmtt/m/n/10.95 ts1_vader_sentiment <- vader_df(ts1$content) # apply vader lexicon based sentiment analysis[] 
+ []
+
+
+Overfull \hbox (37.7724pt too wide) in paragraph at lines 886--886
+[]\OT1/cmtt/m/n/10.95 ts1 <- cbind(ts1, ts1_vader_sentiment) #join sentiment results back to original df[] 
+ []
+
+[42] [43] [44]
+Overfull \hbox (49.26978pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/10.95 nasdaq_sent_anova = lm(daily_volatility_nasdaq ~ sentiment_class, data=indices_sent)[] 
+ []
+
+
+Overfull \hbox (112.50534pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/10.95 #Assign a 'doc_id' to ts1 to add back the topics after they have been discovered by topic model[] 
+ []
+
+
+Overfull \hbox (9.02896pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/10.95 trump_vcorpus <- tm_map(trump_vcorpus, removePunctuation) #remove punctuation[] 
+ []
+
+
+Overfull \hbox (9.02896pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/10.95 trump_vcorpus <- tm_map(trump_vcorpus, removeWords, tm::stopwords('english'))[] 
+ []
+
+
+Overfull \hbox (43.52109pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/10.95 #trump_vcorpus <- tm_map(trump_vcorpus, stripWhitespace)   #remove dupe white space[] 
+ []
+
+[45] [46]
+Overfull \hbox (118.25403pt too wide) in paragraph at lines 1063--1063
+[]\OT1/cmtt/m/n/10.95 latex_table <- xtable(trump_topics_df, caption = "Top Terms per Topic", label = "tab:lda_terms")[] 
+ []
+
+[47]
+Overfull \hbox (3.28027pt too wide) in paragraph at lines 1063--1063
+[]  \OT1/cmtt/m/n/10.95 ts1 <- left_join(ts1, trump_topic_dominant, by = c('doc_id' = 'document'))[] 
+ []
+
+
+Overfull \hbox (233.22778pt too wide) in paragraph at lines 1063--1063
+[]\OT1/cmtt/m/n/10.95 ts1_topic_indices2 <- indices_union %>% left_join(ts1,by=c("Date" = "sentiment_date"),relationship = "many-to-many")[] 
+ []
+
+
+Overfull \hbox (95.25928pt too wide) in paragraph at lines 1063--1063
+[]\OT1/cmtt/m/n/10.95 test2 <- aov(daily_volatility_sp500 ~ topic, data=ts1_topic_indices %>% filter(gamma > 0.6))[] 
+ []
+
+
+Overfull \hbox (394.19104pt too wide) in paragraph at lines 1109--1109
+[]    \OT1/cmtt/m/n/10.95 IMIGRATION = c('aliens', 'border', 'borders', 'enforcement', 'homeland', 'illegal', 'illegally', 'illegals', 'migrant', 'mexico', 'patrol'),[] 
+ []
+
+
+Overfull \hbox (629.88724pt too wide) in paragraph at lines 1109--1109
+[]    \OT1/cmtt/m/n/10.95 RATES = c('bill', 'budget', 'capital', 'inflation', 'job', 'jobs', 'jerome', 'powell', 'price', 'prices', 'rate', 'rates', 'tax', 'treasury', 'economy', 'economic', 'taxes', 'fed'),[] 
+ []
+
+
+Overfull \hbox (233.22778pt too wide) in paragraph at lines 1109--1109
+[]    \OT1/cmtt/m/n/10.95 TRADE = c('canada', 'china', 'india', 'negotiations', 'steel', 'tariff', 'tariffs', 'trade', 'war', 'commerce'),[] 
+ []
+
+
+Overfull \hbox (394.19104pt too wide) in paragraph at lines 1109--1109
+[]    \OT1/cmtt/m/n/10.95 WAR = c('defense', 'hostages', 'ceasefire', 'iran', 'israel', 'military', 'putin', 'russia', 'russian', 'ukraine', 'vladimir', 'zelenskyy'),[] 
+ []
+
+
+Overfull \hbox (181.4896pt too wide) in paragraph at lines 1109--1109
+[]    \OT1/cmtt/m/n/10.95 SOCIAL = c('elon', 'musk', 'cost', 'cut', 'costs', 'cuts', 'cutting', 'security', 'social', 'veterans')[] 
+ []
+
+[48]
+Overfull \hbox (124.00272pt too wide) in paragraph at lines 1109--1109
+[]  \OT1/cmtt/m/n/10.95 ts1_topic_indices2 <- left_join(ts1_topic_indices, slda_topic_max, by = c("doc_id" = "doc_id"))[] 
+ []
+
+
+Overfull \hbox (181.4896pt too wide) in paragraph at lines 1109--1109
+[]\OT1/cmtt/m/n/10.95 test_slda <- aov(daily_volatility_sp500 ~ slda_topic, data=ts1_topic_indices2 %>% filter(slda_gamma > 0.4))[] 
+ []
+
+[49]
+Overfull \hbox (49.26978pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 p0 <- bar_plot <- ggplot(df_counts, aes(x = category, y = count, fill = category)) +[] 
+ []
+
+[50] [51]
+Overfull \hbox (26.27502pt too wide) in paragraph at lines 1292--1292
+[]  \OT1/cmtt/m/n/10.95 geom_line(aes(y = Close_sp500_normalized, color = "S&P 500"), linewidth = 1) +[] 
+ []
+
+
+Overfull \hbox (26.27502pt too wide) in paragraph at lines 1292--1292
+[]  \OT1/cmtt/m/n/10.95 geom_line(aes(y = Close_nasdaq_normalized, color = "NASDAQ"), linewidth = 1) +[] 
+ []
+
+[52]
+Overfull \hbox (112.50534pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 p8 <- ggplot(vader_sentiment_counts, aes(x = sentiment_class, y = n, fill = sentiment_class)) +[] 
+ []
+
+
+Overfull \hbox (118.25403pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 p10 <- ggplot(indices_sent_long, aes(x = sentiment_class, y = values, fill = sentiment_class)) +[] 
+ []
+
+
+Overfull \hbox (118.25403pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 p11 <- ggplot(indices_sent_long, aes(x = sentiment_class, y = values, fill = sentiment_class)) +[] 
+ []
+
+[53]
+Overfull \hbox (49.26978pt too wide) in paragraph at lines 1292--1292
+[]    \OT1/cmtt/m/n/10.95 title = "Top 30 Most Frequent Terms Found in Donald Trump's Truth Social Posts",[] 
+ []
+
+
+Overfull \hbox (49.26978pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 col_trump_20 %>% ggplot(aes(x=fct_reorder(collocation,count,.desc=TRUE), y=count)) +[] 
+ []
+
+
+Overfull \hbox (14.77765pt too wide) in paragraph at lines 1292--1292
+[]  \OT1/cmtt/m/n/10.95 labs(title = "Barchart of Collocations from the Trump Truth Social Archive",[] 
+ []
+
+[54]
+Overfull \hbox (158.49484pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 ts1_topic_indices_long2_filtered <- ts1_topic_indices_long2 %>% filter(source == "sp500", gamma > 0.75)[] 
+ []
+
+
+Overfull \hbox (141.24878pt too wide) in paragraph at lines 1292--1292
+[]\OT1/cmtt/m/n/10.95 topic_sp500_boxplot <- ts1_topic_indices_long2_filtered %>% ggplot(aes(metric, values,fill=source))+[] 
+ []
+
+
+Overfull \hbox (192.98697pt too wide) in paragraph at lines 1292--1292
+[]  \OT1/cmtt/m/n/10.95 #cols = c("daily_change_sp500", "daily_volatility_sp500","daily_change_nasdaq", "daily_volatility_nasdaq"),[] 
+ []
+
+[55] (./Capstone.bbl [56]
+Appendix A.
+) [57
+
+]
+
+======================== Attention ===============================
+
+The signature lines are different for each College/School of
+George Mason University.
+
+The current signature page is set according to the requirements
+of the Volgenau School of Information Technology and Engineering.
+Students of other colleges/schools may need to manipulate the
+"signaturepage" section of the gmudissertation.sty file in order
+for the signature page to be formatted correctly.
+
+==================================================================
+
+[58] (./Capstone.aux) ) 
+Here is how much of TeX's memory you used:
+ 7613 strings out of 476025
+ 172356 string characters out of 5790017
+ 1861388 words of memory out of 5000000
+ 27969 multiletter control sequences out of 15000+600000
+ 521311 words of font info for 67 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 73i,10n,77p,1040b,527s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
+Output written on Capstone.pdf (67 pages, 1244656 bytes).
+PDF statistics:
+ 320 PDF objects out of 1000 (max. 8388607)
+ 197 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+

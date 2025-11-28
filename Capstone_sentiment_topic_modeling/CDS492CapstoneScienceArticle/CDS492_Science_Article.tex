@@ -1,0 +1,215 @@
+%--------------------------------------------------------------------+
+% template_ieee.tex - template file for CDS-492 homework.            |
+% Copyright (C) 2021--2025 Dr. Kent L. Miller.  All rights reserved. |
+% License: GNU GPL3+.  See http://www.gnu.org/licenses/              |
+%--------------------------------------------------------------------+
+% IEEEtran - Institute Electrical and Electronic Engineers
+\documentclass[10pt,final,journal,compsoc,letterpaper,twocolumn]{IEEEtran}
+\usepackage{graphicx,physics,hyperref,siunitx}
+\usepackage[hyperpageref]{backref}
+\usepackage{float}
+
+
+\begin{document}
+\title{CDS-492: Capstone Science Article Fall 2025}
+\author{Eric Wu}
+\date{\today}
+\maketitle
+\begin{abstract}
+  The effect of sentiment and news on the stock market has been used by institutional and retail investors to predict the potential for arbitrage. 
+  The aim of this paper is to identify and establish a link between the social media ramblings from Donald Trump during his second term on the stock market. 
+  The outsized influence of an individual on the stock market could effect the worldwide economy and have far reaching consequences. 
+  This research builds off of the behavioral finance framework of the stock market, the documented effects of predicting market movement using textual data derived from news sources and social media content, and the natural language processing tools developed by open source developers. 
+  The historical stock quotes used in this project were obtained from Yahoo Finance and Donald Trump's social media posts were obtained from a webscrape of Truth Social.
+  In this paper we explore the effect of derived sentiment classes on the daily volatility of the stock market, and the effect of the topics Donald Trump posts about on the stock market.
+  Although we failed to establish a link between the sentiment classes of Trump's tweets, we were able to identify a relationship between the topics of his tweets on the daily volatility of the S\&P500.
+\end{abstract}
+\tableofcontents
+
+\section{Introduction}
+
+During his second term, the 47th president of the United States, Donald Trump, has inflicted chaos and pandemonium on the markets via his enlightened posts on social media. This unease has caused retail and institutional investors to second-guess their risk tolerance, long-term holdings, and confidence in the continued financial growth of the United States.
+Do Donald Trump's colorful social media posts actually effect market performance in a measurable and meaningful manner the short and long-term?
+
+
+\section{Prior Research}
+As the landscape of stock market movement has evolved, the use of sentiment betas has become increasingly important \cite{davidwugler2007} \cite{nofer2015}.
+Sentiment scores and the derived sentiment catagories have been oft used by financial analysts and and researchers in stock market movement prediction models sentiment \cite{johndavid2022} \cite{shahisahzulkernie2018} \cite{dassadhukhanchatterjeecharkabarti2022} \cite{Hutto_Gilbert_2014}.
+The use of techniques have advanced as technology and text mediums have evolved.
+Social media, online news sources, and online forums have become valuble sources of data to derive sentiment \cite{johndavid2022} \cite{shahisahzulkernie2018} \cite{dassadhukhanchatterjeecharkabarti2022} \cite{Hutto_Gilbert_2014}. 
+Studies have used dictionary and lexicon based models to derive sentiment from corpora and been shown to be performant on news headlines and article and on individual's social media posts \cite{johndavid2022} \cite{dassadhukhanchatterjeecharkabarti2022}. 
+The use of topic modeling and joint sentiment-topic models have become popular as a preditor in stock price movement models \cite{NguyenThienHai2015Saos}. 
+
+
+\section{Data}
+
+In this project, 3 datasets were used. 
+Two datasets come from Yahoo Finance, a leading media company that provides finance related news, including stock quotes. 
+These two data sets contain stock movement data for the following index funds, the SP500, Standards and Poors 500, and IXIC, the NASDAQ 500. 
+Yahoo fiance partners with trading exchanges and providers of financial market data to collect and provide historical stock quote data \cite{CSI_quote_20251022_IXIC} \cite{CSI_quote_20251022_GSPC}. 
+
+The third data set used for this project is a web scrape of all of Donald J. Trump's posts on his social media platform, Truth social. 
+This data includes his direct posts, re-posts, and his interactions with various truth social users. 
+The web scrape was provided using an open sourced tool from the github user, stiles, who provides a scraped mirror of Donald Trump's posts for research purposes \cite{stilesgh}. 
+
+The Yahoo Finance finance datasets did not require extensive cleansing. 
+I derived the folowing features for the index datasets: daily volatility, daily change, and daily return. 
+
+The effect of the news cycle, or in this case the ''Trump post cycle'', required a mapping were if a post was posted before or during the open hours of the stock market, the post would be attributed to the same day.
+Otherwise, if the post was posted after the closing time of the market, then the post would be attributed to the following day.   
+
+The truth social dataset was dirty and required filtering for blank content, removal of miss-encoded symbols, and removal of posts incliuding links or reposts of other posts.
+The textual content of the truth social data set was then conveted to a corpus to clean the text in the remaining posts. 
+Following this cleansing, a sentiment analyzer using the VADER lexicon, a LDA topic modeler, and seededLDA topic modeler where applied to the corpus to assign sentiment and topic catagories to Trump's posts.
+
+\section{Theory}
+The original hypothesis was that the sentiment of Donald Trump's posts would effect the stock market. 
+I used index funds to abstract the stock market, in this case the S\&P500 and NASDAQ Composite. 
+
+My null hypothesis for this initial theory was:
+
+\begin{equation}
+    H_{0} : \mu_{positive} = \mu_{neutral} = \mu_{negative}
+\end{equation} \\
+
+My second hypothesis was that the topic of Donald Trump's posts would effect the stock market. 
+I used index funds to abstract the stock market, in this case, I only used the S\&P500 index, because the performance of both indexes was similar over the timeframe of Trump's second presidency.
+
+\begin{equation}
+    H_{0} : \mu_{topic_i} = \mu_{topic_{i+1}} = \mu_{topic_{n}}
+\end{equation} \\
+
+\section{Results}
+Given that there was not a significant difference in means between the sentiment classes when measuring the sample means from closing\_price and daily\_change, we do not fit the necessary conditions to perform an ANOVA test.
+The following ANOVA test serves to illustrate the lack of significance sentiment classes had on daily\_volatility at a 5 percent significance level:
+
+{
+\footnotesize\begin{verbatim}
+
+Analysis of Variance Table
+
+Response: daily_volatility_sp500
+                  Df  Sum Sq Mean Sq F value Pr(>F)
+sentiment_class    2    7886  3942.8  0.8504 0.4274
+Residuals       1613 7478507  4636.4      
+\end{verbatim}
+}
+
+The ANOVA test found a p value of 0.000272, which is very significant at a 5 percent significance level, meaning I can reject the null hypothesis of no difference in means between groups. 
+
+{
+\scriptsize\begin{verbatim}
+  Terms:
+                  topic Residuals
+Sum of Squares   151055   6063361
+Deg. of Freedom       9      1265
+
+Residual standard error: 69.23273
+Estimated effects may be unbalanced
+              Df  Sum Sq Mean Sq F value   Pr(>F)    
+topic          9  151055   16784   3.502 0.000272 ***
+Residuals   1265 6063361    4793                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{verbatim}
+}
+
+The TukeyHSD found a signifcant difference between topic 3 and topics 2, 7, 8, and 9. 
+From this result, having significant p values, I can reject the null hypothesis. 
+I believe there is evidence to support the possibility that topic 3 has a tangible effect on the daily volatility of the S\&P500.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & diff & lwr & upr & pval \\ 
+  \hline
+  3-2 & 28.20 & 0.82 & 55.59 & 0.04 \\ 
+  7-3 & -33.48 & -58.98 & -7.98 & 0.00 \\ 
+  8-3 & -25.02 & -49.28 & -0.75 & 0.04 \\ 
+  9-3 & -33.83 & -62.33 & -5.33 & 0.01 \\ 
+   \hline
+\end{tabular}
+\caption{Post-Hoc Tukey LDA} 
+%\label{tab:Post-Hoc Tukey LDA}
+\end{table}
+\footnote{The topics are descrived as: Topic 2: Negative posts; Topic 3: Trade War; Topic 7: Positive posts; Topic 8: War; Topic 9: Border control/imigration}
+
+
+I then tried a seeded LDA model where I defined 5 topics, immigration, rates, trade, war, and social in a dictionary. 
+These topics where meant to model topics that Donald Trump frequently posted about that might move the market.
+I also allowed the seededLDA to discover 3 nondefined topics, leading to a total number of 8 topics for the seedLDA. 
+The other parameters used in the seededLDA were: $batch\_size = 0.01,  auto\_iter = TRUE, verbose = TRUE, residual = 3$.
+I then conducted an ANOVA test on the explanatory variable, topic, and the response variable, the daily volatility of the S\&P500, using the topics extracted from the seededLDA model.
+
+{
+\scriptsize\begin{verbatim}
+  Terms:
+                slda_topic Residuals
+Sum of Squares       80064   4291314
+Deg. of Freedom          7      1087
+
+Residual standard error: 62.83193
+Estimated effects may be unbalanced
+              Df  Sum Sq Mean Sq F value  Pr(>F)   
+slda_topic     7   80064   11438   2.897 0.00528 **
+Residuals   1087 4291314    3948                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{verbatim}
+}
+
+The ANOVA test found a p value of 0.00528, which is very significant at a 5 percent significance level, meaning I can reject the null hypothesis of no difference in means between groups. 
+Although, this p value for the topics extracted from the SLDA topics was less signifcant than that of the LDA topics. 
+I then conducted a post-hoc test using TukeyHSD. Below is the Tukey test:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & diff & lwr & upr & pval \\ 
+  \hline
+  TRADE-other1 & 24.99 & 4.34 & 45.64 & 0.01 \\ 
+  TRADE-other2 & 23.11 & 1.22 & 45.01 & 0.03 \\ 
+  TRADE-other3 & 21.42 & 0.09 & 42.76 & 0.05 \\ 
+  WAR-TRADE & -25.48 & -46.77 & -4.18 & 0.01 \\ 
+   \hline
+\end{tabular}
+\caption{Post-Hoc Tukey SLDA} 
+%\label{tab:Post-Hoc Tukey SLDA}
+\end{table}
+\footnote{The topics are descrived as: Trade: Posts about tariffs and trade wars; Other1: Negative Posts; Other2: Positive Nationalism; Other3: Digs at Democrats; War: Posts about actual war}
+
+From the TukeyHSD, we find that Trump's posts about trade, trade wars, and tarrifs had significant differences in the mean daily volatility of the S\&P500. 
+
+\section{Conclusion}
+
+The tests I conducted on the use of sentiment to predict market movement were unexpectedly unfruitful. 
+There where previous studies that found corelations between sentiment catagories extracted from forms of textual media, like articles and social media posts about the markets, however, due to my singular focus on an individual's posts on an arguably smaller and potentially more niche social media platform and due to the relience on pretrained and precomputed lexicon based sentiment analyzers, I was unable to reproduce the previous studies' results. 
+
+This inability to reproduce the previous studies's results could also be down to a small dataset of about 3000 useable texts, of which were around 200 words or less. 
+Another potential error may be due to the VADER lexicon having specifically been trained on written text compared to the tendency of social media users to type out what is more similar to what they may say in conversation. 
+
+The lack of differences in the means of the daily volatility of both stock indexes, given the sentiment class, could be due to the VADER lexicon not performing well on my textual dataset, but it could also be due to the markets being more interested in the substance of specific DJT social media posts rather than the sentiment. 
+
+Despite these issues in the sentiment analysis component of my research, I was able to come up with some interesting findings using topic modeling on the textual dataset. 
+
+In this stage of my research, I elected to only test against the S\&P500, instead of both indexes. 
+This is because, I was able to establish a similar normalized performance between the two over the tested time frame. 
+The ANOVA Test of the 10 topics discovered from the LDA Topic model versus the daily volatility of the S\&P500 found enough evidence to reject the null hypothesis, that there was no significant difference in means. 
+This gave me reason to conduct a post-hoc test using TukeyHSD. The post-hoc test found a significant difference between topic 3 when compared to topics 2, 7, 8, and 9.
+
+Then I tried another LDA topic model, this time using a partially preseeded model. 
+The preseeded topics, where topics of DJT posts that I thought had the potential to influence the market. 
+This time the ANOVA test between the topics discovered by the seededLDA model versus the daily volatility of the S\&P500 found enough evidence to reject the null hypothesis. 
+From the post-hoc test, a significant difference between topic on trade wars when compared to topics other1, other2, other3, and actual war. 
+
+These findings on the influence of the topic of DJT's social media posts, the substantive content of the posts, on the market are measurable. 
+Unfortnately I was unable to chain together the influence of the sentiment and the topic. 
+If thete were to be more research on the subject of this research, I would recommend compiling a custom lexicon based sentiment analyzer based on DJT and other politicians or influential public figure's social media posts and their stated sentiments. 
+I would also recommend exploring other topic models like top2vec or text embending extraction. 
+
+\bibliographystyle{IEEEtran}
+\bibliography{gmuETD}
+
+\end{document}

@@ -1,0 +1,52 @@
+\begin{thebibliography}{10}
+
+\bibitem{johndavid2022}
+David~L. John, Bela Stantic, Tien~Khoa Tran, Ualsher Tukayev, Tzung-Pei Hong, Bogdan Trawiński, Edward Szczerbicki, and Ngoc~Thanh Nguyen.
+\newblock Machine learning or lexicon based sentiment analysis techniques on social media posts.
+\newblock In {\em Intelligent Information and Database Systems}, volume 13758 of {\em Lecture Notes in Computer Science}, pages 3--12. Springer, Switzerland, 2022.
+
+\bibitem{shahisahzulkernie2018}
+Dev Shah, Haruna Isah, and Farhana Zulkernine.
+\newblock Predicting the effects of news sentiments on the stock market, 2018.
+
+\bibitem{NguyenThienHai2015Saos}
+Thien~Hai Nguyen, Kiyoaki Shirai, and Julien Velcin.
+\newblock Sentiment analysis on social media for stock movement prediction.
+\newblock {\em Expert systems with applications}, 42(24):9603--9611, 2015.
+
+\bibitem{dassadhukhanchatterjeecharkabarti2022}
+Nabanita Das, Bikash Sadhukhan, Tanusree Chatterjee, and Satyajit Chakrabarti.
+\newblock Effect of public sentiment on stock market movement prediction during the {COVID-19} outbreak.
+\newblock {\em Social Network Analysis and Mining}, 12(1):92, 2022.
+
+\bibitem{nofer2015}
+Michael. Nofer.
+\newblock The value of social media for predicting stock returns : Preconditions, instruments and performance analysis, 2015.
+
+\bibitem{davidwugler2007}
+Malcolm Baker and Jeffrey Wurgler.
+\newblock Investor sentiment in the stock market.
+\newblock {\em Journal of Economic Perspectives}, 21(2):129--152, Spring 2007.
+
+\bibitem{CSI_quote_2025-10-22_IXIC}
+Historical stock quote for {IXIC}, 2025.
+
+\bibitem{CSI_quote_2025-10-22_GSPC}
+Historical stock quote for {GSPC}, 2025.
+
+\bibitem{stiles}
+Matt Stiles.
+\newblock Trump-truth-social-archive.
+\newblock https://github.com/stiles/trump-truth-social-archive, 2025.
+
+\bibitem{Hutto_Gilbert_2014}
+C.~Hutto and Eric Gilbert.
+\newblock Vader: A parsimonious rule-based model for sentiment analysis of social media text.
+\newblock {\em Proceedings of the International AAAI Conference on Web and Social Media}, 8(1):216--225, May 2014.
+
+\bibitem{Blei2003}
+David~M. Blei, Andrew~Y. Ng, and Michael~I. Jordan.
+\newblock Latent dirichlet allocation.
+\newblock {\em J. Mach. Learn. Res.}, 3(null):993–1022, March 2003.
+
+\end{thebibliography}

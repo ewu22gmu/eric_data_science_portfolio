@@ -1,0 +1,608 @@
+---
+title: "CDS492_Capstone_Project_nb"
+output: html_document
+author: Eric Wu
+date: "2025-09-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Initialize
+
+### Load in libraries
+
+```{r}
+library(conflicted) #fix dplyr and stats conflicts
+library(tidyverse)
+#prefer dplyr library for filter() and lag()
+conflicts_prefer(dplyr::filter(),dplyr::lag(),.quiet=TRUE)
+#library(jsonlite) #for reading in .json files
+library(readr) #for reading in .csv files with automatic encoding detection
+library(lubridate) #used for date + time objects 
+library(TTR) #used for SMA
+library(quanteda) #used for NLP text preprocessing
+library(udpipe)
+library(stringr)
+library(vader) #used for sentiment analysis
+```
+
+### Set working directory
+
+```{r}
+file_dir = "/Users/eric/Documents/University/CDS492/Capstone Proposal/DataFiles"
+setwd(file_dir)
+```
+
+### Read in and clean data
+
+```{r}
+sp500 <- read.csv('SPX.csv') %>%
+  mutate(
+    Date = mdy(Date), # mdy() is for Month-Day-Year format
+    across(c(Open, High, Low, Close), parse_number)
+  )
+nasdaq <- read.csv('IXIC.csv') %>%
+  mutate(
+    Date = mdy(Date), # mdy() is for Month-Day-Year format
+    across(c(Open, High, Low, Close), parse_number)
+  )
+ts <- read.csv('truth_archive.csv') %>% 
+  mutate(
+    created_at = ymd_hms(created_at)
+  )
+```
+
+### Filter ts for start and end to match the indices
+
+```{r}
+#Filter 'truth social' for posts within the time frame of 01/01/2025 - 09/26/2026
+ts$created_at <- ymd_hms(ts$created_at)
+#define start and end dates of the time frame
+start_date <- ymd("2025-01-01")
+end_date <- ymd("2025-09-26")
+
+#filter df
+ts1 <- ts %>% filter(created_at >= start_date, created_at <= end_date)
+
+#filter df for blank content
+ts1 <- ts1 %>% filter(trimws(content) != '')
+```
+
+## Plots of index vs post per day
+
+### Preparation for visualization of DJT posts per day against the closing price of the indices
+
+```{r}
+#get posts per day from ts1
+ppd <- ts1 %>% 
+  mutate(Date = as_date(created_at)) %>%
+  group_by(Date) %>%
+  summarise(post_count = n()) %>%
+  ungroup()
+
+#combine ppd and indicies data
+ppd_nasdaq <- nasdaq %>%
+  left_join(ppd, by = 'Date') %>%
+  mutate(post_count = replace_na(post_count, 0))
+```
+
+### nasdaq vs posts per day
+
+```{r}
+#combine ppd and indicies data
+ppd_nasdaq <- nasdaq %>%
+  left_join(ppd, by = 'Date') %>%
+  mutate(post_count = replace_na(post_count, 0))
+
+#scale 
+scale_factor <- max(ppd_nasdaq$Close, na.rm = TRUE) / max(ppd_nasdaq$post_count, na.rm = TRUE)
+
+#plot
+p1 <- ggplot(ppd_nasdaq, aes(x = Date)) +
+  geom_line(aes(y = Close, color = "Closing Price"), linewidth = 1) +
+  geom_col(aes(y = post_count * scale_factor, fill = "Tweet Count"), alpha = 0.5) +
+  scale_y_continuous(
+    name = "Stock Price (USD)",
+    # Add a secondary axis for the tweet count, using the scaling factor
+    sec.axis = sec_axis(~ . / scale_factor, name = "Count of Tweets")
+  ) +
+  scale_color_manual(name = "Data", values = "darkblue") +
+  scale_fill_manual(name = "Data", values = "coral") +
+  labs(
+    title = "NASDAQ Closing Price vs. Tweet Count",
+    x = "Date",
+    color = "Data",
+    fill = "Data"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+plot(p1)
+```
+
+### sp500 vs posts per day
+
+```{r}
+#combine ppd and indicies data
+ppd_sp500 <- sp500 %>%
+  left_join(ppd, by = 'Date') %>%
+  mutate(post_count = replace_na(post_count, 0))
+
+#scale 
+scale_factor <- max(ppd_sp500$Close, na.rm = TRUE) / max(ppd_sp500$post_count, na.rm = TRUE)
+
+#plot
+p2 <- ggplot(ppd_sp500, aes(x = Date)) +
+  geom_line(aes(y = Close, color = "Closing Price"), linewidth = 1) +
+  geom_col(aes(y = post_count * scale_factor, fill = "Tweet Count"), alpha = 0.5) +
+  scale_y_continuous(
+    name = "Stock Price (USD)",
+    # Add a secondary axis for the tweet count, using the scaling factor
+    sec.axis = sec_axis(~ . / scale_factor, name = "Count of Tweets")
+  ) +
+  scale_color_manual(name = "Data", values = "darkblue") +
+  scale_fill_manual(name = "Data", values = "coral") +
+  labs(
+    title = "S&P500 Closing Price vs. Tweet Count",
+    x = "Date",
+    color = "Data",
+    fill = "Data"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+plot(p2)
+```
+
+## Data wrangling
+
+### Feature generation for the indexes
+
+```{r}
+#S&P500
+sp500 <- sp500 %>% 
+  mutate(
+    #finance features
+    daily_change = Close - Open, #add a change in price per day
+    daily_volatility = High - Low, 
+    daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day
+    sma20 = SMA(Close, n = 20), #20 day simple moving avg
+    
+    #time based features
+    day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label
+    month = month(Date, label = TRUE, abbr = FALSE) #add a month label
+  )
+
+#add a movement feature
+sp500 <- sp500 %>% 
+  mutate(
+    Result = case_when(
+      daily_change > 0 ~ "gain",
+      daily_change < 0 ~ "loss",
+      daily_change == 0 ~ "none",
+      TRUE ~ NA_character_ #fallback for NA values
+    )
+  )
+
+#NASDAQ
+nasdaq <- nasdaq %>% 
+  mutate(
+    #finance features
+    daily_change = Close - Open, #add a change in price per day
+    daily_volatility = High - Low, 
+    daily_return = (Close - lag(Close)) / lag(Close), #pct change day by day
+    sma20 = SMA(Close, n = 20), #20 day simple moving avg
+    
+    #time based features
+    day_of_week = wday(Date, label = TRUE, abbr = FALSE), #add a day of week label
+    month = month(Date, label = TRUE, abbr = FALSE) #add a month label
+  )
+
+#add a movement feature
+nasdaq <- nasdaq %>% 
+  mutate(
+    Result = case_when(
+      daily_change > 0 ~ "gain",
+      daily_change < 0 ~ "loss",
+      daily_change == 0 ~ "none",
+      TRUE ~ NA_character_ #fallback for NA values
+    )
+  )
+
+```
+
+### Join indices data for ease in plotting
+
+```{r}
+indices <- sp500 %>% 
+  inner_join(nasdaq, 
+             by = 'Date',
+             suffix = c('_sp500','_nasdaq')
+             )
+```
+
+##Plot indices over time
+
+### Plot nasdaq and sp500 performance over 01/25 to 09/25
+
+```{r}
+p3 <- ggplot(data = indices, aes(x = Date)) +
+  geom_line(aes(y = Close_sp500, color = "S&P 500"), linewidth = 1) +
+  geom_line(aes(y = Close_nasdaq, color = "NASDAQ"), linewidth = 1) +
+  labs(
+    title = "S&P 500 vs. NASDAQ Closing Prices",
+    subtitle = "Daily performance over time",
+    y = "Closing Price (USD)",
+    x = "Date",
+    color = "Index" # Title for the color legend
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+plot(p3)
+```
+
+## Plot normalized indices over time
+
+### Normalize indices\$Close_i for i in {\_sp500, nasdaq}
+
+```{r}
+indices_normalized <- indices %>%
+  mutate(
+    Close_sp500_normalized = (Close_sp500 / first(Close_sp500)) * 100,
+    Close_nasdaq_normalized = (Close_nasdaq / first(Close_nasdaq)) * 100
+  )
+```
+
+### Plot normalized performance from 01/25 to 09/25
+
+```{r}
+p4 <- ggplot(data = indices_normalized, aes(x = Date)) +
+  geom_line(aes(y = Close_sp500_normalized, color = "S&P 500"), linewidth = 1) +
+  geom_line(aes(y = Close_nasdaq_normalized, color = "NASDAQ"), linewidth = 1) +
+  labs(
+    title = "S&P 500 vs. NASDAQ Performance",
+    subtitle = "Indexed to start date (Base = 100)",
+    y = "Normalized Price",
+    x = "Date",
+    color = "Index"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+plot(p4)
+```
+
+## Plot of average gain per day of week for indexes
+
+### Aggregate daily change by day of week
+
+```{r}
+daily_avg_change <- indices %>%
+  group_by(day_of_week_sp500) %>%
+  summarise(
+    avg_change_sp500 = mean(daily_change_sp500, na.rm = TRUE),
+    avg_change_nasdaq = mean(daily_change_nasdaq, na.rm = TRUE),
+    .groups = "drop" #drop the grouping to prevent errors in later steps
+  )
+
+#pivot the data to a tidy format for plotting both indices
+daily_avg_change_tidy <- daily_avg_change %>%
+  pivot_longer(
+    cols = c(avg_change_sp500, avg_change_nasdaq),
+    names_to = "index",
+    values_to = "average_change"
+  )
+
+#plot barchart
+p5 <- ggplot(daily_avg_change_tidy, aes(x = day_of_week_sp500, y = average_change, fill = index)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Average Daily Change by Day of Week",
+    subtitle = "S&P 500 vs. NASDAQ",
+    x = "Day of Week",
+    y = "Average Change",
+    fill = "Index"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+plot(p5)
+```
+
+### Normalized average daily gains
+
+```{r}
+#normalize daily_change_i
+indices_normalized <- indices %>%
+  # Normalize the S&P 500 data
+  mutate(daily_change_sp500_norm = (daily_change_sp500 - mean(daily_change_sp500, na.rm = TRUE)) / sd(daily_change_sp500, na.rm = TRUE)) %>%
+  # Normalize the NASDAQ data
+  mutate(daily_change_nasdaq_norm = (daily_change_nasdaq - mean(daily_change_nasdaq, na.rm = TRUE)) / sd(daily_change_nasdaq, na.rm = TRUE))
+
+#aggregate the normalized data by day of the week
+daily_avg_norm_change <- indices_normalized %>%
+  group_by(day_of_week_sp500) %>%
+  summarise(
+    avg_change_sp500_norm = mean(daily_change_sp500_norm, na.rm = TRUE),
+    avg_change_nasdaq_norm = mean(daily_change_nasdaq_norm, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+#pivot to tidy format
+daily_avg_norm_change_tidy <- daily_avg_norm_change %>%
+  pivot_longer(
+    cols = c(avg_change_sp500_norm, avg_change_nasdaq_norm),
+    names_to = "index",
+    values_to = "average_change"
+  )
+
+#plot the normalized averages
+p6 <- ggplot(daily_avg_norm_change_tidy, aes(x = day_of_week_sp500, y = average_change, fill = index)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Average Normalized Daily Change by Day of Week",
+    subtitle = "S&P 500 vs. NASDAQ (Z-Score)",
+    x = "Day of Week",
+    y = "Average Normalized Change",
+    fill = "Index"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+plot(p6)
+```
+
+## Plot boxplots of numerical features in indices
+
+```{r}
+indices_union <- bind_rows(
+  "sp500" = sp500,
+  "nasdaq" = nasdaq,
+  .id = "source"
+)
+
+indices_long <- indices_union %>%
+  pivot_longer(
+    cols = where(is.numeric),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p7 <- ggplot(indices_long, aes(x = metric, y = value, fill = source)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics by Index",
+    x = "Metric",
+    y = "Value",
+    fill = "Source Index"
+  ) +
+  # Rotate axis labels for better readability
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p7)
+```
+
+## Plot seperate boxplots of numerical features of indices
+
+```{r}
+#sp500
+sp500_long <- sp500 %>%
+  pivot_longer(
+    cols = where(is.numeric),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p8 <- ggplot(sp500_long, aes(x = metric, y = value)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics by Index",
+    x = "Metric",
+    y = "Value"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p8)
+
+
+#nasdaq
+nasdaq_long <- nasdaq %>%
+  pivot_longer(
+    cols = where(is.numeric),
+    names_to = "metric",
+    values_to = "value"
+)
+
+p9 <- ggplot(nasdaq_long, aes(x = metric, y = value)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Metrics by Index",
+    x = "Metric",
+    y = "Value"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+plot(p9)
+```
+
+## Apply VADER lexicon based sentiment analysis
+
+```{r}
+ts1_vader_sentiment <- vader_df(ts1$content) # apply vader lexicon based sentiment analysis
+ts1 <- cbind(ts1, ts1_vader_sentiment) #join sentiment results back to original df
+ts1 <- ts1 %>%
+  mutate(sentiment_class = case_when(
+    compound >= 0.05 ~ "Positive",
+    compound > -0.05 & compound < 0.05 ~ "Neutral",
+    compound <= -0.05 ~ "Negative",
+    TRUE ~ NA_character_ # Handle any unexpected cases
+  ))
+vader_sentiment_counts <- ts1 %>%
+  count(sentiment_class)
+```
+
+### Plot sentiment scores
+
+```{r}
+p10 <- ggplot(vader_sentiment_counts, aes(x = sentiment_class, y = n, fill = sentiment_class)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Sentiment Distribution of Social Media Posts",
+    x = "Sentiment",
+    y = "Number of Posts"
+  ) +
+  theme_minimal()
+
+plot(p10)
+```
+
+## Plot sentiment vs closing price of indices
+
+```{r}
+#find the avg sentiment per day from djt's posts
+daily_sentiment <- ts1 %>%
+  group_by(Date = as_date(created_at)) %>%
+  summarise(
+    avg_sentiment = mean(compound, na.rm=TRUE)
+  )
+
+#merge with sp500
+avg_sent_sp500 <- left_join(sp500, daily_sentiment, by=c("Date" = "Date"))
+
+
+#filter out content = c(retweets)
+#use grepl
+
+```
+
+### Sentiment vs sp500
+
+```{r}
+
+price_range <- max(avg_sent_sp500$Close, na.rm = TRUE) - min(avg_sent_sp500$Close, na.rm = TRUE)
+sentiment_range <- max(avg_sent_sp500$avg_sentiment, na.rm = TRUE) - min(avg_sent_sp500$avg_sentiment, na.rm = TRUE)
+scale_factor <- price_range / sentiment_range
+
+ggplot(avg_sent_sp500, aes(x = Date)) +
+  geom_line(aes(y = Close), color = "steelblue", size = 1) +
+  geom_line(aes(y = avg_sentiment * scale_factor), color = "darkred", size = 1) +
+  scale_y_continuous(
+    name = "S&P 500 Closing Price",
+    #add the second axis, using the inverse of the scaling factor
+    sec.axis = sec_axis(~./scale_factor, name="Average VADER Sentiment")
+  ) +
+  
+  labs(
+    title = "S&P 500 Closing Price vs. Average Daily Sentiment",
+    x = "Date"
+  ) +
+  theme_minimal() +
+  #customize axis colors for clarity
+  theme(
+    axis.title.y = element_text(color = "steelblue"),
+    axis.text.y = element_text(color = "steelblue"),
+    axis.title.y.right = element_text(color = "darkred"),
+    axis.text.y.right = element_text(color = "darkred")
+  )
+```
+
+## 
+
+```{r}
+
+ts1 %>% filter(by = content)
+
+
+
+
+%>% ggplot(aes(x=as_date(created_at))) + 
+  geom_count(aes(y=compound), alpha = 0.3)
+```
+
+## Hypothesis test
+
+```{latex}
+\begin{math}
+h_0 = 
+
+\end{math}
+```
+
+```{r}
+
+```
+
+## Joining the sentiment counts and index data in accordance with the time of day the tweets where posted. 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
+
+## 
+
+```{r}
+
+```
