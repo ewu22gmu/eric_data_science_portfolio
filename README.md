@@ -6,7 +6,7 @@ Repository containing portfolio of data science projects completed by me. Presen
 
 ## Contents
 
-### Capstone on Applying NLP to explore the relationship between social media posts and the stock market. ([Notebook]([https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Capstone%20Sentiment%20Topic%20Modeling%20on%20Social%20Media%20to%20Predict%20Stock%20Market%20Movement]))
+### Capstone on Applying NLP to explore the relationship between social media posts and the stock market. ([Repo](https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Capstone%20Sentiment%20Topic%20Modeling%20on%20Social%20Media%20to%20Predict%20Stock%20Market%20Movement))
 
 This project explores the effect of social media posts on the movement of the stock market. The goal of this project was to understand the impact of the sentiment and topics reflected in user's social media posts on stock price movement.
 
@@ -20,7 +20,7 @@ Steps:
 
 *Tools: udpipe, tm, tidyverse, lubridate, quanteda, vader, seededlda, knitr, forcats*
 
-### Automatic Poetry Analysis ([Notebook]([https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/NLP%20Automatic%20Poetry%20Analysis]))
+### Automatic Poetry Analysis ([Repo](https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/NLP%20Automatic%20Poetry%20Analysis))
 
 The goal of this project was analyzing the changes and similatities between 18th century poetry and modern poetry. Changes in structure, grammar, context, and sentiment were considered and analyzed.
 
@@ -33,7 +33,7 @@ Steps:
 
 *Tools: pandas, nltk, scipy, matplotlib*
 
-### Manufacturing Agent Based Model([Notebook]([https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Manufacturing%20Agent%20Based%20Model]))
+### Manufacturing Agent Based Model([Repo](https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Manufacturing%20Agent%20Based%20Model))
 
 This project was an expansion on a Agent based model used for analyzing the economic and business cycles of manufacturing on an island population. The Manufacturing agent based model facilitates the manufacturing of goods between manufacturing plant locations to store locations to consumers. 
 
@@ -46,7 +46,7 @@ Steps:
 
 *Tools: pandas, numpy, ast, re, os, sys, warnings, sqlite3, matplotlib*
 
-### Additional Coursework([Notebook]([https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Coursework]))
+### Additional Coursework([Repo](https://github.com/ewu22gmu/eric_data_science_portfolio/tree/main/Coursework))
 
 Additional relevant coursework can be accessed here. Included is work on image processing, agent based modeling, machine learning, natural language processing, network analysis, and computational modeling.
 
