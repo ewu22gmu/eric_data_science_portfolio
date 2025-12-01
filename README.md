@@ -6,7 +6,7 @@ Repository containing portfolio of data science projects completed by me. Presen
 
 ## Contents
 
-### Capstone on Applying NLP to explore the relationship between Donald Trump's posts and the stock market. ([Notebook](link))
+### Capstone on Applying NLP to explore the relationship between social media posts and the stock market. ([Notebook](link))
 
 Summary goes here.
 
